@@ -23,10 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v%0i(l-sqscn6a^57b*2+n@k8qx$lf993v%vh%l849@t(d_n0m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', default=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost').split(',')
 
 # Application definition
 
@@ -37,9 +36,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # Frugal apps
     'accounts',
+    'books',
+    'wishlist',
+    'marketplace',
+    'groceries',   # add this app (python manage.py startapp groceries)
+    'clothing',    # add this app (python manage.py startapp clothing)
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -85,6 +89,9 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -99,6 +106,14 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# API keys — loaded from .env, never hardcoded
+KROGER_CLIENT_ID     = config('KROGER_CLIENT_ID')
+KROGER_CLIENT_SECRET = config('KROGER_CLIENT_SECRET')
+KROGER_BASE_URL      = config('KROGER_BASE_URL', default='https://api.kroger.com/v1')
+GOOGLE_API_KEY       = config('GOOGLE_API_KEY')
+WORLDCAT_API_KEY     = config('WORLDCAT_API_KEY', default='')
+OPEN_LIBRARY_BASE_URL = config('OPEN_LIBRARY_BASE_URL', default='https://openlibrary.org')
 
 
 # Internationalization
@@ -116,7 +131,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+MEDIA_URL  = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
