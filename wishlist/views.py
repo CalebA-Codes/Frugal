@@ -1,4 +1,3 @@
-# wishlist/views.py
 import csv
 from django.http import JsonResponse, HttpResponse
 from django.views import View
