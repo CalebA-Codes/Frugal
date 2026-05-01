@@ -1,5 +1,3 @@
-books/services.py
-# books/services.py
 """
 Wraps the Open Library API — no API key required.
 Docs: https://openlibrary.org/developers/api
